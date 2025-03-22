@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 // Connect to your backend Socket.io server
 const socket = io("http://localhost:5001");
 
-// Define a type for User
+// Define a type for a user
 interface User {
   id: string;
   name?: string;
@@ -16,7 +16,7 @@ export default function Chat() {
   const [text, setText] = useState("");
   const [sender, setSender] = useState("User1");
   const [receiver, setReceiver] = useState("User2");
-  // Initialize selectedUser as null or a User object
+  // Declare selectedUser as either a User object or null
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function Chat() {
   }, [selectedUser]);
 
   const sendMessage = () => {
-    if (!text.trim()) return;
+    if (!text.trim() || !selectedUser) return;
     const msg = { sender, text, receiver };
     socket.emit("message", msg);
     setMessages((prev) => [...prev, msg]);
@@ -38,46 +38,19 @@ export default function Chat() {
   return (
     <div style={{ padding: 20 }}>
       <h1>Chat Page</h1>
-
-      <div style={{ marginBottom: 10 }}>
-        <label>
-          Sender:
-          <input
-            type="text"
-            value={sender}
-            onChange={(e) => setSender(e.target.value)}
-            style={{ marginLeft: 10 }}
-          />
-        </label>
-      </div>
-
-      <div style={{ marginBottom: 10 }}>
-        <label>
-          Receiver:
-          <input
-            type="text"
-            value={receiver}
-            onChange={(e) => setReceiver(e.target.value)}
-            style={{ marginLeft: 10 }}
-          />
-        </label>
-      </div>
-
       <div style={{ marginBottom: 10 }}>
         <label>
           Selected User ID:
           <input
             type="text"
             value={selectedUser ? selectedUser.id : ""}
-            onChange={(e) => {
-              // When typing, update selectedUser with a simple object.
-              setSelectedUser({ id: e.target.value });
-            }}
+            onChange={(e) => 
+              setSelectedUser({ id: e.target.value, name: e.target.value })
+            }
             style={{ marginLeft: 10 }}
           />
         </label>
       </div>
-
       <div style={{ marginBottom: 10 }}>
         <label>
           Message:
@@ -89,7 +62,6 @@ export default function Chat() {
           />
         </label>
       </div>
-
       <button onClick={sendMessage}>Send</button>
 
       <hr />
