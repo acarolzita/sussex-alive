@@ -1,81 +1,110 @@
 "use client";
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
-import { motion } from "framer-motion";
 
-const socket = io("http://localhost:5000");
+// Connect to your backend Socket.io server
+const socket = io("http://localhost:5001");
+
+// Define a type for User
+interface User {
+  id: string;
+  name?: string;
+}
 
 export default function Chat() {
-  const [users, setUsers] = useState([]);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [text, setText] = useState("");
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [sender, setSender] = useState("User1");
+  const [receiver, setReceiver] = useState("User2");
+  // Initialize selectedUser as null or a User object
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   useEffect(() => {
-    fetch("/api/profile")
-      .then((res) => res.json())
-      .then((data) => setUsers(data));
-
     if (selectedUser) {
       fetch(`/api/messages?receiverId=${selectedUser.id}`)
         .then((res) => res.json())
         .then((data) => setMessages(data));
-
-      socket.on(`chat:${selectedUser.id}`, (msg) => {
-        setMessages((prev) => [...prev, msg]);
-      });
-
-      return () => {
-        socket.off(`chat:${selectedUser.id}`);
-      };
     }
   }, [selectedUser]);
 
-  const sendMessage = async () => {
-    await fetch("/api/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text, receiverId: selectedUser.id }),
-    });
-
-    socket.emit("message", { senderId: "User123", receiverId: selectedUser.id, text });
+  const sendMessage = () => {
+    if (!text.trim()) return;
+    const msg = { sender, text, receiver };
+    socket.emit("message", msg);
+    setMessages((prev) => [...prev, msg]);
     setText("");
   };
 
   return (
-    <div className="flex h-screen">
-      <div className="w-1/3 p-4 border-r bg-gray-100">
-        <h2 className="text-lg font-bold">Users</h2>
-        {users.map((user) => (
-          <motion.div 
-            key={user.id} 
-            onClick={() => setSelectedUser(user)} 
-            className="cursor-pointer p-2 hover:bg-blue-200 rounded-lg transition"
-          >
-            {user.name}
-          </motion.div>
+    <div style={{ padding: 20 }}>
+      <h1>Chat Page</h1>
+
+      <div style={{ marginBottom: 10 }}>
+        <label>
+          Sender:
+          <input
+            type="text"
+            value={sender}
+            onChange={(e) => setSender(e.target.value)}
+            style={{ marginLeft: 10 }}
+          />
+        </label>
+      </div>
+
+      <div style={{ marginBottom: 10 }}>
+        <label>
+          Receiver:
+          <input
+            type="text"
+            value={receiver}
+            onChange={(e) => setReceiver(e.target.value)}
+            style={{ marginLeft: 10 }}
+          />
+        </label>
+      </div>
+
+      <div style={{ marginBottom: 10 }}>
+        <label>
+          Selected User ID:
+          <input
+            type="text"
+            value={selectedUser ? selectedUser.id : ""}
+            onChange={(e) => {
+              // When typing, update selectedUser with a simple object.
+              setSelectedUser({ id: e.target.value });
+            }}
+            style={{ marginLeft: 10 }}
+          />
+        </label>
+      </div>
+
+      <div style={{ marginBottom: 10 }}>
+        <label>
+          Message:
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            style={{ marginLeft: 10 }}
+          />
+        </label>
+      </div>
+
+      <button onClick={sendMessage}>Send</button>
+
+      <hr />
+
+      <h2>Messages</h2>
+      <ul>
+        {messages.map((msg, idx) => (
+          <li key={idx}>
+            <strong>{msg.sender}</strong>: {msg.text} (to {msg.receiver})
+          </li>
         ))}
-      </div>
-      <div className="w-2/3 p-4">
-        {selectedUser ? (
-          <>
-            <h2 className="text-lg font-bold">Chat with {selectedUser.name}</h2>
-            <div className="border p-4 h-64 overflow-auto bg-gray-50 rounded-lg">
-              {messages.map((msg, index) => (
-                <div key={index} className={`p-2 rounded-md ${msg.senderId === "User123" ? "bg-blue-500 text-white" : "bg-gray-300"}`}>
-                  {msg.text}
-                </div>
-              ))}
-            </div>
-            <input className="border p-2 mt-2 w-full" placeholder="Type a message..." value={text} onChange={(e) => setText(e.target.value)} />
-            <button onClick={sendMessage} className="mt-2 bg-green-500 text-white px-4 py-2 rounded-lg">
-              Send
-            </button>
-          </>
-        ) : <p>Select a user to chat with</p>}
-      </div>
+      </ul>
     </div>
   );
 }
+
 
 
