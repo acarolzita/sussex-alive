@@ -1,0 +1,81 @@
+/* Global Styles */
+body {
+  background-color: #f3f4f6; /* Tailwind bg-gray-100 */
+  color: #1f2937;           /* Tailwind text-gray-900 */
+  font-family: sans-serif;  /* Tailwind font-sans */
+  margin: 0;
+  padding: 0;
+}
+
+/* Center the main container */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding-left: 1rem;  /* Equivalent to px-4 */
+  padding-right: 1rem;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.5rem 1.5rem;  /* py-2, px-6 */
+  border-radius: 0.5rem;   /* rounded-lg */
+  color: #ffffff;
+  font-weight: 600;        /* font-semibold */
+  transition: all 300ms ease-in-out;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #3b82f6; /* Tailwind blue-500 */
+}
+
+.btn-primary:hover {
+  background-color: #2563eb; /* Tailwind blue-600 */
+}
+
+.btn-secondary {
+  background-color: #6b7280; /* Tailwind gray-500 */
+}
+
+.btn-secondary:hover {
+  background-color: #4b5563; /* Tailwind gray-600 */
+}
+
+/* Form Inputs */
+.input {
+  width: 100%;
+  padding: 0.5rem; /* p-2 */
+  border: 1px solid #d1d5db; /* border-gray-300 */
+  border-radius: 0.5rem; /* rounded-lg */
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  box-shadow: 0 0 0 2px #3b82f6; /* focus:ring-2 focus:ring-blue-500 */
+}
+
+/* Navbar Styles */
+.navbar {
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* approximate shadow-md */
+  padding: 1rem; /* p-4 */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-link {
+  color: #374151; /* Tailwind text-gray-700 */
+  transition: color 200ms ease-in-out;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: #3b82f6; /* Tailwind text-blue-500 */
+}

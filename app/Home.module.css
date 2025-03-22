@@ -1,0 +1,10 @@
+/* Home.module.css */
+.container {
+    background-color: #f3f4f6; /* Equivalent to Tailwind's bg-gray-100 */
+    color: #1f2937;           /* Equivalent to Tailwind's text-gray-900 */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
