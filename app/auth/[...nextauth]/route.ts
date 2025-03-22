@@ -1,7 +1,7 @@
 // frontend/app/auth/[...nextauth]/route.ts
 import { NextResponse } from "next/server";
 
-// Dummy placeholder for NextAuth configuration
+// Dummy NextAuth configuration placeholder.
 export const authOptions = {};
 
 export async function GET() {
