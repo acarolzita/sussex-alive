@@ -1,2 +1,3 @@
-// app/auth/[...nextauth]/authOptions.ts
-export const authOptions = {} as any;
+// Option: Export a dummy authOptions as any
+export const authOptions: any = {};
+
