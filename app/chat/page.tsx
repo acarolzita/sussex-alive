@@ -2,23 +2,24 @@
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 
-// Connect to your backend Socket.io server
-const socket = io("http://localhost:5001");
-
 // Define a type for a user
 interface User {
   id: string;
   name?: string;
 }
 
+// Connect to your backend Socket.io server
+const socket = io("http://localhost:5001");
+
 export default function Chat() {
   const [messages, setMessages] = useState<any[]>([]);
   const [text, setText] = useState("");
   const [sender, setSender] = useState("User1");
   const [receiver, setReceiver] = useState("User2");
-  // Declare selectedUser as either a User object or null
+  // selectedUser can be a User object or null
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
+  // When selectedUser is set, fetch messages for that user
   useEffect(() => {
     if (selectedUser) {
       fetch(`/api/messages?receiverId=${selectedUser.id}`)
@@ -28,9 +29,11 @@ export default function Chat() {
   }, [selectedUser]);
 
   const sendMessage = () => {
+    // Do nothing if no text or no selectedUser
     if (!text.trim() || !selectedUser) return;
     const msg = { sender, text, receiver };
     socket.emit("message", msg);
+    // Update local messages so sender sees the message immediately
     setMessages((prev) => [...prev, msg]);
     setText("");
   };
@@ -38,19 +41,19 @@ export default function Chat() {
   return (
     <div style={{ padding: 20 }}>
       <h1>Chat Page</h1>
+
       <div style={{ marginBottom: 10 }}>
         <label>
           Selected User ID:
           <input
             type="text"
             value={selectedUser ? selectedUser.id : ""}
-            onChange={(e) => 
-              setSelectedUser({ id: e.target.value, name: e.target.value })
-            }
+            onChange={(e) => setSelectedUser({ id: e.target.value })}
             style={{ marginLeft: 10 }}
           />
         </label>
       </div>
+
       <div style={{ marginBottom: 10 }}>
         <label>
           Message:
@@ -62,6 +65,7 @@ export default function Chat() {
           />
         </label>
       </div>
+
       <button onClick={sendMessage}>Send</button>
 
       <hr />
@@ -77,6 +81,7 @@ export default function Chat() {
     </div>
   );
 }
+
 
 
 
