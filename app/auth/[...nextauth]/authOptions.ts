@@ -1,2 +1,2 @@
-// frontend/app/auth/[...nextauth]/authOptions.ts
-export const authOptions = {};
+// app/auth/[...nextauth]/authOptions.ts
+export const authOptions = {} as any;
