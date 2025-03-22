@@ -1,7 +1,6 @@
-// frontend/app/auth/[...nextauth]/route.ts
 import { NextResponse } from "next/server";
 
-// Export a dummy authOptions as any to bypass strict type-checking
+// Export authOptions explicitly as any to bypass strict type checks.
 export const authOptions: any = {};
 
 export async function GET() {
