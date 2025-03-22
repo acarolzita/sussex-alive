@@ -1,8 +1,8 @@
 // frontend/app/auth/[...nextauth]/route.ts
 import { NextResponse } from "next/server";
 
-// Dummy NextAuth configuration placeholder.
-export const authOptions = {};
+// Export a dummy authOptions as any to bypass strict type-checking
+export const authOptions: any = {};
 
 export async function GET() {
   return NextResponse.json({ message: "NextAuth GET not implemented yet." });
