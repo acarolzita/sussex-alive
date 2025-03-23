@@ -16,16 +16,23 @@ export default function Chat() {
   const [text, setText] = useState("");
   const [sender, setSender] = useState("User1");
   const [receiver, setReceiver] = useState("User2");
-  // Explicitly type selectedUser as a User object or null.
+  // Explicitly type selectedUser as either a User object or null.
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   useEffect(() => {
-    if (selectedUser) {
-      fetch(`/api/messages?receiverId=${selectedUser.id}`)
+    if (selectedUser !== null) {
+      // Capture selectedUser.id into a variable
+      const userId = selectedUser.id;
+      fetch(`/api/messages?receiverId=${userId}`)
         .then((res) => res.json())
         .then((data) => setMessages(data));
     }
   }, [selectedUser]);
+
+  // Define a handler with explicit event type.
+  const handleSelectedUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedUser({ id: e.target.value });
+  };
 
   const sendMessage = () => {
     if (!text.trim() || !selectedUser) return;
@@ -45,8 +52,7 @@ export default function Chat() {
           <input
             type="text"
             value={selectedUser ? selectedUser.id : ""}
-            // Explicitly cast the object as User.
-            onChange={(e) => setSelectedUser({ id: e.target.value } as User)}
+            onChange={handleSelectedUserChange}
             style={{ marginLeft: 10 }}
           />
         </label>
@@ -79,3 +85,4 @@ export default function Chat() {
     </div>
   );
 }
+
