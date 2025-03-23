@@ -20,18 +20,17 @@ export default function Chat() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   useEffect(() => {
-    if (selectedUser !== null) {
-      // Capture selectedUser.id into a variable
-      const userId = selectedUser.id;
+    if (selectedUser) {
+      // Use non-null assertion (!) to tell TypeScript that selectedUser is not null.
+      const userId: string = selectedUser!.id;
       fetch(`/api/messages?receiverId=${userId}`)
         .then((res) => res.json())
         .then((data) => setMessages(data));
     }
   }, [selectedUser]);
 
-  // Define a handler with explicit event type.
   const handleSelectedUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedUser({ id: e.target.value });
+    setSelectedUser({ id: e.target.value } as User);
   };
 
   const sendMessage = () => {
@@ -85,4 +84,5 @@ export default function Chat() {
     </div>
   );
 }
+
 
