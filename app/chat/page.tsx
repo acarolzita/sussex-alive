@@ -16,27 +16,33 @@ export default function Chat() {
   const [text, setText] = useState("");
   const [sender, setSender] = useState("User1");
   const [receiver, setReceiver] = useState("User2");
-  // Define selectedUser as either a User object or null.
+  // selectedUser is explicitly typed as User or null.
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  // Event handler to update selectedUser with a proper User object.
-  const handleSelectedUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Create a new user object with the entered id.
-    const newUser: User = { id: e.target.value, name: "" };
-    setSelectedUser(newUser);
-  };
-
+  // When selectedUser is defined, fetch messages for that user.
   useEffect(() => {
-    if (selectedUser !== null) {
-      // At this point, selectedUser is a User, so accessing its id is safe.
-      fetch(`/api/messages?receiverId=${selectedUser.id}`)
+    if (selectedUser) {
+      // TypeScript now knows selectedUser is not null.
+      const userId: string = selectedUser.id;
+      fetch(`/api/messages?receiverId=${userId}`)
         .then((res) => res.json())
         .then((data) => setMessages(data));
     }
   }, [selectedUser]);
 
+  // Handler for updating selectedUser
+  const handleSelectedUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.trim();
+    if (value === "") {
+      setSelectedUser(null);
+    } else {
+      // Create a proper User object.
+      setSelectedUser({ id: value });
+    }
+  };
+
   const sendMessage = () => {
-    if (!text.trim() || selectedUser === null) return;
+    if (!text.trim() || !selectedUser) return;
     const msg = { sender, text, receiver };
     socket.emit("message", msg);
     setMessages((prev) => [...prev, msg]);
@@ -46,7 +52,7 @@ export default function Chat() {
   return (
     <div style={{ padding: 20 }}>
       <h1>Chat Page</h1>
-      
+
       <div style={{ marginBottom: 10 }}>
         <label>
           Selected User ID:
@@ -58,7 +64,7 @@ export default function Chat() {
           />
         </label>
       </div>
-      
+
       <div style={{ marginBottom: 10 }}>
         <label>
           Message:
@@ -70,11 +76,11 @@ export default function Chat() {
           />
         </label>
       </div>
-      
+
       <button onClick={sendMessage}>Send</button>
-      
+
       <hr />
-      
+
       <h2>Messages</h2>
       <ul>
         {messages.map((msg, idx) => (
@@ -86,5 +92,8 @@ export default function Chat() {
     </div>
   );
 }
+
+
+
 
 
