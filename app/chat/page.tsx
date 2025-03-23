@@ -16,25 +16,27 @@ export default function Chat() {
   const [text, setText] = useState("");
   const [sender, setSender] = useState("User1");
   const [receiver, setReceiver] = useState("User2");
-  // Explicitly type selectedUser as either a User object or null.
+  // Define selectedUser as either a User object or null.
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
+  // Event handler to update selectedUser with a proper User object.
+  const handleSelectedUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Create a new user object with the entered id.
+    const newUser: User = { id: e.target.value, name: "" };
+    setSelectedUser(newUser);
+  };
+
   useEffect(() => {
-    if (selectedUser) {
-      // Use non-null assertion (!) to tell TypeScript that selectedUser is not null.
-      const userId: string = selectedUser!.id;
-      fetch(`/api/messages?receiverId=${userId}`)
+    if (selectedUser !== null) {
+      // At this point, selectedUser is a User, so accessing its id is safe.
+      fetch(`/api/messages?receiverId=${selectedUser.id}`)
         .then((res) => res.json())
         .then((data) => setMessages(data));
     }
   }, [selectedUser]);
 
-  const handleSelectedUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedUser({ id: e.target.value } as User);
-  };
-
   const sendMessage = () => {
-    if (!text.trim() || !selectedUser) return;
+    if (!text.trim() || selectedUser === null) return;
     const msg = { sender, text, receiver };
     socket.emit("message", msg);
     setMessages((prev) => [...prev, msg]);
