@@ -16,33 +16,28 @@ export default function Chat() {
   const [text, setText] = useState("");
   const [sender, setSender] = useState("User1");
   const [receiver, setReceiver] = useState("User2");
-  // selectedUser is explicitly typed as User or null.
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  
+  // Instead of null, initialize selectedUser as a User object with an empty id.
+  const [selectedUser, setSelectedUser] = useState<User>({ id: "" });
 
-  // When selectedUser is defined, fetch messages for that user.
   useEffect(() => {
-    if (selectedUser) {
-      // TypeScript now knows selectedUser is not null.
-      const userId: string = selectedUser.id;
-      fetch(`/api/messages?receiverId=${userId}`)
+    // Only fetch if the user id is non-empty.
+    if (selectedUser.id !== "") {
+      fetch(`/api/messages?receiverId=${selectedUser.id}`)
         .then((res) => res.json())
         .then((data) => setMessages(data));
     }
   }, [selectedUser]);
 
-  // Handler for updating selectedUser
+  // Update selectedUser with the new id from the input.
   const handleSelectedUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
-    if (value === "") {
-      setSelectedUser(null);
-    } else {
-      // Create a proper User object.
-      setSelectedUser({ id: value });
-    }
+    const newId = e.target.value;
+    setSelectedUser({ id: newId });
   };
 
   const sendMessage = () => {
-    if (!text.trim() || !selectedUser) return;
+    // If there's no text or selectedUser.id is empty, do nothing.
+    if (!text.trim() || selectedUser.id === "") return;
     const msg = { sender, text, receiver };
     socket.emit("message", msg);
     setMessages((prev) => [...prev, msg]);
@@ -52,19 +47,19 @@ export default function Chat() {
   return (
     <div style={{ padding: 20 }}>
       <h1>Chat Page</h1>
-
+      
       <div style={{ marginBottom: 10 }}>
         <label>
           Selected User ID:
           <input
             type="text"
-            value={selectedUser ? selectedUser.id : ""}
+            value={selectedUser.id}
             onChange={handleSelectedUserChange}
             style={{ marginLeft: 10 }}
           />
         </label>
       </div>
-
+      
       <div style={{ marginBottom: 10 }}>
         <label>
           Message:
@@ -76,11 +71,11 @@ export default function Chat() {
           />
         </label>
       </div>
-
+      
       <button onClick={sendMessage}>Send</button>
-
+      
       <hr />
-
+      
       <h2>Messages</h2>
       <ul>
         {messages.map((msg, idx) => (
@@ -92,6 +87,7 @@ export default function Chat() {
     </div>
   );
 }
+
 
 
 
