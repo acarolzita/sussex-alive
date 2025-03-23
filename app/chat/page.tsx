@@ -16,10 +16,9 @@ export default function Chat() {
   const [text, setText] = useState("");
   const [sender, setSender] = useState("User1");
   const [receiver, setReceiver] = useState("User2");
-  // selectedUser can be a User object or null
+  // Explicitly type selectedUser as either a User object or null
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  // When selectedUser is set, fetch messages for that user
   useEffect(() => {
     if (selectedUser) {
       fetch(`/api/messages?receiverId=${selectedUser.id}`)
@@ -29,11 +28,9 @@ export default function Chat() {
   }, [selectedUser]);
 
   const sendMessage = () => {
-    // Do nothing if no text or no selectedUser
     if (!text.trim() || !selectedUser) return;
     const msg = { sender, text, receiver };
     socket.emit("message", msg);
-    // Update local messages so sender sees the message immediately
     setMessages((prev) => [...prev, msg]);
     setText("");
   };
@@ -41,7 +38,7 @@ export default function Chat() {
   return (
     <div style={{ padding: 20 }}>
       <h1>Chat Page</h1>
-
+      
       <div style={{ marginBottom: 10 }}>
         <label>
           Selected User ID:
@@ -53,7 +50,7 @@ export default function Chat() {
           />
         </label>
       </div>
-
+      
       <div style={{ marginBottom: 10 }}>
         <label>
           Message:
@@ -65,11 +62,11 @@ export default function Chat() {
           />
         </label>
       </div>
-
+      
       <button onClick={sendMessage}>Send</button>
-
+      
       <hr />
-
+      
       <h2>Messages</h2>
       <ul>
         {messages.map((msg, idx) => (
@@ -81,6 +78,7 @@ export default function Chat() {
     </div>
   );
 }
+
 
 
 
