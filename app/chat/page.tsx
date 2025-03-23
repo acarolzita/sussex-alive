@@ -16,27 +16,28 @@ export default function Chat() {
   const [text, setText] = useState("");
   const [sender, setSender] = useState("User1");
   const [receiver, setReceiver] = useState("User2");
-  
-  // Instead of null, initialize selectedUser as a User object with an empty id.
+  // Initialize selectedUser as a User with an empty id.
   const [selectedUser, setSelectedUser] = useState<User>({ id: "" });
 
   useEffect(() => {
-    // Only fetch if the user id is non-empty.
-    if (selectedUser.id !== "") {
-      fetch(`/api/messages?receiverId=${selectedUser.id}`)
+    // Destructure id from selectedUser
+    const { id } = selectedUser;
+    // Only fetch messages if id is non-empty
+    if (id !== "") {
+      fetch(`/api/messages?receiverId=${id}`)
         .then((res) => res.json())
         .then((data) => setMessages(data));
     }
   }, [selectedUser]);
 
-  // Update selectedUser with the new id from the input.
-  const handleSelectedUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newId = e.target.value;
-    setSelectedUser({ id: newId });
+  const handleSelectedUserChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    // Update selectedUser with the new id
+    setSelectedUser({ id: e.target.value });
   };
 
   const sendMessage = () => {
-    // If there's no text or selectedUser.id is empty, do nothing.
     if (!text.trim() || selectedUser.id === "") return;
     const msg = { sender, text, receiver };
     socket.emit("message", msg);
@@ -87,9 +88,6 @@ export default function Chat() {
     </div>
   );
 }
-
-
-
 
 
 
