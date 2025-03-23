@@ -2,13 +2,13 @@
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 
-// Define a type for a user
+// Define a type for a user.
 interface User {
   id: string;
   name?: string;
 }
 
-// Connect to your backend Socket.io server
+// Connect to your backend Socket.io server.
 const socket = io("http://localhost:5001");
 
 export default function Chat() {
@@ -16,7 +16,7 @@ export default function Chat() {
   const [text, setText] = useState("");
   const [sender, setSender] = useState("User1");
   const [receiver, setReceiver] = useState("User2");
-  // Explicitly type selectedUser as either a User object or null
+  // Explicitly type selectedUser as a User object or null.
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -45,7 +45,8 @@ export default function Chat() {
           <input
             type="text"
             value={selectedUser ? selectedUser.id : ""}
-            onChange={(e) => setSelectedUser({ id: e.target.value })}
+            // Explicitly cast the object as User.
+            onChange={(e) => setSelectedUser({ id: e.target.value } as User)}
             style={{ marginLeft: 10 }}
           />
         </label>
@@ -78,8 +79,3 @@ export default function Chat() {
     </div>
   );
 }
-
-
-
-
-
