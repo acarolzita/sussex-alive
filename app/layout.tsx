@@ -1,4 +1,3 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* No manual <title> tag here */}
+        <title>{String(metadata.title)}</title>
       </head>
       <body>{children}</body>
     </html>
