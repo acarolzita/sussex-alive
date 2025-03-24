@@ -11,7 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* Removed manual <title> to avoid type errors */}
+        {/* No manual <title> tag here */}
       </head>
       <body>{children}</body>
     </html>
