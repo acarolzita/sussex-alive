@@ -1,28 +1,30 @@
-"use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-// Define a type for a user.
-interface User {
-  id: string;
-  name?: string;
-}
-
-// Connect to your backend Socket.io server.
-const socket = io("http://localhost:5001");
+let socket;
 
 export default function Chat() {
   const [messages, setMessages] = useState<any[]>([]);
   const [text, setText] = useState("");
   const [sender, setSender] = useState("User1");
   const [receiver, setReceiver] = useState("User2");
-  // Initialize selectedUser as a User with an empty id.
   const [selectedUser, setSelectedUser] = useState<User>({ id: "" });
 
   useEffect(() => {
-    // Destructure id from selectedUser
+    // Connect once on mount
+    socket = io("http://localhost:5001");
+    // Optionally listen for messages from the server
+    socket.on("message", (msg) => {
+      setMessages((prev) => [...prev, msg]);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
     const { id } = selectedUser;
-    // Only fetch messages if id is non-empty
     if (id !== "") {
       fetch(`/api/messages?receiverId=${id}`)
         .then((res) => res.json())
@@ -30,10 +32,7 @@ export default function Chat() {
     }
   }, [selectedUser]);
 
-  const handleSelectedUserChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    // Update selectedUser with the new id
+  const handleSelectedUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedUser({ id: e.target.value });
   };
 
@@ -48,7 +47,6 @@ export default function Chat() {
   return (
     <div style={{ padding: 20 }}>
       <h1>Chat Page</h1>
-      
       <div style={{ marginBottom: 10 }}>
         <label>
           Selected User ID:
@@ -60,7 +58,6 @@ export default function Chat() {
           />
         </label>
       </div>
-      
       <div style={{ marginBottom: 10 }}>
         <label>
           Message:
@@ -72,11 +69,8 @@ export default function Chat() {
           />
         </label>
       </div>
-      
       <button onClick={sendMessage}>Send</button>
-      
       <hr />
-      
       <h2>Messages</h2>
       <ul>
         {messages.map((msg, idx) => (
