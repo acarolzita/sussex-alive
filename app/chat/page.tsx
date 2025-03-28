@@ -1,33 +1,32 @@
 "use client";
-import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 
-let socket;
+import { useEffect, useState } from "react";
+import { io, Socket } from "socket.io-client";
+
+// Explicitly type the socket variable
+let socket: Socket | undefined;
 
 export default function Chat() {
   const [messages, setMessages] = useState<any[]>([]);
   const [text, setText] = useState("");
   const [sender, setSender] = useState("User1");
   const [receiver, setReceiver] = useState("User2");
-  const [selectedUser, setSelectedUser] = useState<User>({ id: "" });
+  const [selectedUser, setSelectedUser] = useState<{ id: string }>({ id: "" });
 
   useEffect(() => {
-    // Connect once on mount
     socket = io("http://localhost:5001");
-    // Optionally listen for messages from the server
     socket.on("message", (msg) => {
       setMessages((prev) => [...prev, msg]);
     });
 
     return () => {
-      socket.disconnect();
+      socket?.disconnect();
     };
   }, []);
 
   useEffect(() => {
-    const { id } = selectedUser;
-    if (id !== "") {
-      fetch(`/api/messages?receiverId=${id}`)
+    if (selectedUser.id !== "") {
+      fetch(`/api/messages?receiverId=${selectedUser.id}`)
         .then((res) => res.json())
         .then((data) => setMessages(data));
     }
@@ -40,7 +39,7 @@ export default function Chat() {
   const sendMessage = () => {
     if (!text.trim() || selectedUser.id === "") return;
     const msg = { sender, text, receiver };
-    socket.emit("message", msg);
+    socket?.emit("message", msg);
     setMessages((prev) => [...prev, msg]);
     setText("");
   };
@@ -83,6 +82,7 @@ export default function Chat() {
     </div>
   );
 }
+
 
 
 
