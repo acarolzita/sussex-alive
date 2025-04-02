@@ -13,21 +13,24 @@ export default function RegisterPage() {
   async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // Adjust the URL if you're testing locally or on production.
-    const res = await fetch("https://sussex-alive-backend.onrender.com/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, name, password }),
-    });
+    try {
+      const res = await fetch("https://sussex-alive-backend.onrender.com/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, name, password }),
+      });
 
-    if (res.ok) {
-      const data = await res.json();
-      console.log("Registration successful:", data);
-      // Redirect to the login page after successful registration
-      router.push("/login");
-    } else {
-      const err = await res.json();
-      setError(err.error || "Registration failed");
+      if (res.ok) {
+        const data = await res.json();
+        console.log("Registration successful:", data);
+        router.push("/login");
+      } else {
+        const err = await res.json();
+        setError(err.error || "Registration failed");
+      }
+    } catch (error) {
+      console.error("Network or parsing error:", error);
+      setError("An error occurred. Please try again later.");
     }
   }
 
@@ -74,3 +77,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+
