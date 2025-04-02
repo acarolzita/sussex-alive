@@ -14,7 +14,7 @@ export default function RegisterPage() {
     e.preventDefault();
 
     // Adjust the URL if you're testing locally or on production.
-    const res = await fetch("http://localhost:5001/api/auth/register", {
+    const res = await fetch("https://sussex-alive-backend.onrender.com/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, name, password }),

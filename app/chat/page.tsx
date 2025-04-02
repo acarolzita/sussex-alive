@@ -14,7 +14,7 @@ export default function Chat() {
   const [selectedUser, setSelectedUser] = useState<{ id: string }>({ id: "" });
 
   useEffect(() => {
-    socket = io("http://localhost:5001");
+    socket = io("https://sussex-alive-backend.onrender.com");
     socket.on("message", (msg) => {
       setMessages((prev) => [...prev, msg]);
     });
