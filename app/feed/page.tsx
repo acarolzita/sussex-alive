@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import styles from "./Feed.module.css";
 
-// Define a TypeScript type (or interface) for your posts (adjust properties as needed)
+// Define a TypeScript type for your posts
 type Post = {
-  id: number; // adjust type if your id is a string
+  id: number;
   title: string;
   content: string;
   author: string;
@@ -12,12 +13,10 @@ type Post = {
 };
 
 export default function FeedPage() {
-  // State to store posts, a loading state, and error messages
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch posts from your backend when the component mounts
   useEffect(() => {
     async function fetchPosts() {
       try {
@@ -36,27 +35,26 @@ export default function FeedPage() {
     fetchPosts();
   }, []);
 
-  // Render a loading indicator, error message, or the list of posts
   if (loading) {
-    return <div style={{ padding: "2rem" }}>Loading posts...</div>;
+    return <div className={styles.loading}>Loading posts...</div>;
   }
 
   if (error) {
-    return <div style={{ padding: "2rem", color: "red" }}>Error loading posts: {error}</div>;
+    return <div className={styles.error}>Error loading posts: {error}</div>;
   }
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Feed</h1>
+    <div className={styles.container}>
+      <h1 className={styles.header}>Feed</h1>
       {posts.length === 0 ? (
         <p>No posts available.</p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <ul className={styles.postList}>
           {posts.map((post) => (
-            <li key={post.id} style={{ marginBottom: "2rem", borderBottom: "1px solid #ccc", paddingBottom: "1rem" }}>
-              <h2>{post.title}</h2>
+            <li key={post.id} className={styles.postItem}>
+              <h2 className={styles.postTitle}>{post.title}</h2>
               <p>{post.content}</p>
-              <p style={{ fontStyle: "italic", fontSize: "0.9rem" }}>
+              <p className={styles.postMeta}>
                 By {post.author} on {new Date(post.createdAt).toLocaleDateString()}
               </p>
             </li>
@@ -66,6 +64,7 @@ export default function FeedPage() {
     </div>
   );
 }
+
 
 
   
