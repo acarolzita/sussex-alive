@@ -7,6 +7,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [studentId, setStudentId] = useState("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -17,7 +18,7 @@ export default function RegisterPage() {
       const res = await fetch("https://sussex-alive-backend.onrender.com/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name, password }),
+        body: JSON.stringify({ email, name, password, studentId }),
       });
 
       if (res.ok) {
@@ -72,9 +73,21 @@ export default function RegisterPage() {
             />
           </label>
         </div>
+        <div style={{ marginBottom: "1rem" }}>
+          <label>
+            Student ID:{" "}
+            <input
+              type="text"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+              required
+            />
+          </label>
+        </div>
         <button type="submit">Register</button>
       </form>
     </div>
   );
 }
+
 
