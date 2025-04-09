@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { createPost } from "../api/posts"; // Adjust the import path as needed
 
 export default function CreatePostPage() {
   const [title, setTitle] = useState("");
@@ -12,7 +13,7 @@ export default function CreatePostPage() {
   async function handleCreatePost(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // Get the JWT token from localStorage
+    // Retrieve token from localStorage
     const token = localStorage.getItem("token");
     if (!token) {
       setMessage("You need to be logged in to create a post.");
@@ -20,27 +21,11 @@ export default function CreatePostPage() {
     }
 
     try {
-      const res = await fetch("https://sussex-alive-backend.onrender.com/api/posts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Include the JWT token in the Authorization header
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({ title, content }),
-      });
-
-      const data = await res.json();
-      if (res.ok) {
-        setMessage("Post created successfully!");
-        // Optionally, redirect to the feed page after creating a post
-        router.push("/feed");
-      } else {
-        setMessage(data.error || "Failed to create post.");
-      }
+      const newPost = await createPost(title, content, token);
+      setMessage("Post created successfully!");
+      router.push("/feed");
     } catch (error) {
-      console.error("Error creating post:", error);
-      setMessage("An error occurred while creating the post.");
+      setMessage("Error creating post: " + error.message);
     }
   }
 
@@ -76,3 +61,4 @@ export default function CreatePostPage() {
   );
 }
 
+  
