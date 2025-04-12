@@ -12,7 +12,7 @@ export default function CreatePostPage() {
   async function handleCreatePost(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // Retrieve the JWT token stored in localStorage during login
+    // Retrieve the token from localStorage (ensure you're logged in)
     const token = localStorage.getItem("token");
     if (!token) {
       setMessage("You need to be logged in to create a post.");
@@ -20,25 +20,28 @@ export default function CreatePostPage() {
     }
 
     try {
-      // Make a POST request to your backend, including the JWT in the Authorization header.
+      // This is where you put your fetch call
       const res = await fetch("https://sussex-alive-backend.onrender.com/api/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`  // token is your valid JWT token
         },
-        body: JSON.stringify({ title, content }),
+        body: JSON.stringify({
+          title: title,
+          content: content
+        }),
       });
 
       const data = await res.json();
       if (res.ok) {
         setMessage("Post created successfully!");
-        // Optionally, redirect to the feed page after a successful post creation.
+        // Redirect to feed page after success
         router.push("/feed");
       } else {
         setMessage(data.error || "Failed to create post.");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating post:", error);
       setMessage("An error occurred while creating the post.");
     }
@@ -75,5 +78,6 @@ export default function CreatePostPage() {
     </div>
   );
 }
+
 
 
