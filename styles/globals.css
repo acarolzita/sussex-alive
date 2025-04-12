@@ -1,29 +1,37 @@
-/* Global Styles */
+/* globals.css */
+
+/* Base reset and global styling */
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+/* Global body styles */
 body {
   background-color: #f3f4f6; /* Tailwind bg-gray-100 */
   color: #1f2937;           /* Tailwind text-gray-900 */
-  font-family: sans-serif;  /* Tailwind font-sans */
-  margin: 0;
-  padding: 0;
 }
 
-/* Center the main container */
+/* Utility to center main container, if needed */
 .main-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding-left: 1rem;  /* Equivalent to px-4 */
+  padding-left: 1rem;
   padding-right: 1rem;
 }
 
-/* Buttons */
+/* Button Styles */
 .btn {
-  padding: 0.5rem 1.5rem;  /* py-2, px-6 */
-  border-radius: 0.5rem;   /* rounded-lg */
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
   color: #ffffff;
-  font-weight: 600;        /* font-semibold */
+  font-weight: 600;
   transition: all 300ms ease-in-out;
   border: none;
   cursor: pointer;
@@ -45,12 +53,12 @@ body {
   background-color: #4b5563; /* Tailwind gray-600 */
 }
 
-/* Form Inputs */
+/* Input Styles */
 .input {
   width: 100%;
-  padding: 0.5rem; /* p-2 */
-  border: 1px solid #d1d5db; /* border-gray-300 */
-  border-radius: 0.5rem; /* rounded-lg */
+  padding: 0.5rem;
+  border: 1px solid #d1d5db; /* Tailwind border-gray-300 */
+  border-radius: 0.5rem;
   outline: none;
   box-sizing: border-box;
 }
@@ -63,8 +71,8 @@ body {
 .navbar {
   width: 100%;
   background-color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* approximate shadow-md */
-  padding: 1rem; /* p-4 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -79,3 +87,5 @@ body {
 .nav-link:hover {
   color: #3b82f6; /* Tailwind text-blue-500 */
 }
+
+
