@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createPost } from "../api/posts"; // Adjust the import path as needed
+import { createPost } from "../api/posts"; // Make sure this path correctly points to your API utility file.
 
 export default function CreatePostPage() {
   const [title, setTitle] = useState("");
@@ -13,7 +13,7 @@ export default function CreatePostPage() {
   async function handleCreatePost(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    // Retrieve token from localStorage
+    // Retrieve the token from localStorage
     const token = localStorage.getItem("token");
     if (!token) {
       setMessage("You need to be logged in to create a post.");
@@ -21,10 +21,13 @@ export default function CreatePostPage() {
     }
 
     try {
+      // Attempt to create the post using your API utility.
       const newPost = await createPost(title, content, token);
       setMessage("Post created successfully!");
+      // Redirect to the feed page after a successful post.
       router.push("/feed");
-    } catch (error) {
+    } catch (error: any) {
+      // Optionally, if using TypeScript, you might want to cast error to Error.
       setMessage("Error creating post: " + error.message);
     }
   }
@@ -60,5 +63,6 @@ export default function CreatePostPage() {
     </div>
   );
 }
+
 
   
