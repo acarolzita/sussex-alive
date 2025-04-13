@@ -24,10 +24,8 @@ export default function LoginPage() {
 
       if (res.ok) {
         const data = await res.json();
-        console.log("Login successful:", data);
-        // Save the token for subsequent requests
+        console.log("Login successful, token received:", data.token);
         localStorage.setItem("token", data.token);
-        // Redirect to a protected page or dashboard (e.g., /feed)
         router.push("/feed");
       } else {
         const err = await res.json();
