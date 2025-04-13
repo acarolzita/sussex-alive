@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createPost } from "../api/posts"; // Make sure this path correctly points to your API utility file.
+import { createPost } from "./posts"; // Make sure this path correctly points to your API utility file.
 
 export default function CreatePostPage() {
   const [title, setTitle] = useState("");
