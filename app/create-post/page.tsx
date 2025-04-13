@@ -14,22 +14,24 @@ export default function CreatePostPage() {
 
     // Retrieve the token from localStorage (ensure you're logged in)
     const token = localStorage.getItem("token");
+    console.log("Token being sent:", token); // Debug log for token
+
     if (!token) {
       setMessage("You need to be logged in to create a post.");
       return;
     }
 
     try {
-      // This is where you put your fetch call
+      // Make the POST request to your backend
       const res = await fetch("https://sussex-alive-backend.onrender.com/api/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`  // token is your valid JWT token
+          "Authorization": `Bearer ${token}` // token is your valid JWT token
         },
         body: JSON.stringify({
-          title: title,
-          content: content
+          title,
+          content
         }),
       });
 
@@ -78,6 +80,7 @@ export default function CreatePostPage() {
     </div>
   );
 }
+
 
 
 
