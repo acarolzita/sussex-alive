@@ -9,34 +9,41 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [studentId, setStudentId] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
 
     try {
-      const res = await fetch("https://sussex-alive-backend.onrender.com/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name, password, studentId }),
-      });
+      const res = await fetch(
+        "https://sussex-alive-backend.onrender.com/api/auth/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, name, password, studentId }),
+        }
+      );
 
+      const data = await res.json();
       if (res.ok) {
-        const data = await res.json();
         console.log("Registration successful:", data);
         router.push("/login");
       } else {
-        const err = await res.json();
-        setError(err.error || "Registration failed");
+        setError(data.error || "Registration failed");
       }
-    } catch (error) {
-      console.error("Network or parsing error:", error);
+    } catch (err) {
+      console.error("Network or parsing error:", err);
       setError("An error occurred. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
-    <div style={{ padding: "2rem" }}>
+    <div style={{ padding: "2rem", maxWidth: "400px", margin: "0 auto" }}>
       <h1>Register</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleRegister}>
@@ -48,6 +55,7 @@ export default function RegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
           </label>
         </div>
@@ -59,6 +67,7 @@ export default function RegisterPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              disabled={loading}
             />
           </label>
         </div>
@@ -70,6 +79,7 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
           </label>
         </div>
@@ -81,13 +91,17 @@ export default function RegisterPage() {
               value={studentId}
               onChange={(e) => setStudentId(e.target.value)}
               required
+              disabled={loading}
             />
           </label>
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" disabled={loading} style={{ padding: "0.5rem 1rem" }}>
+          {loading ? "Registering..." : "Register"}
+        </button>
       </form>
     </div>
   );
 }
+
 
 
