@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
+    "firebase": "^11.6.1",
     "framer-motion": "^12.5.0",
     "helmet": "^8.1.0",
     "next": "latest",
