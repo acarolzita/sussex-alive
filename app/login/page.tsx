@@ -10,37 +10,38 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError(null);
     setLoading(true);
-    setError(null); // Clear any previous errors
 
     try {
-      const res = await fetch("https://sussex-alive-backend.onrender.com/api/auth/login", {
+      const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
+      const data = await res.json();
       if (res.ok) {
-        const data = await res.json();
         console.log("Login successful, token received:", data.token);
         localStorage.setItem("token", data.token);
         router.push("/feed");
       } else {
-        const err = await res.json();
-        setError(err.error || "Login failed");
+        setError(data.error || "Login failed");
       }
-    } catch (error) {
-      console.error("Error during login:", error);
-      setError("An error occurred during login.");
+    } catch (err) {
+      console.error("Error during login:", err);
+      setError("An error occurred during login. Please try again.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div style={{ padding: "2rem" }}>
+    <div style={{ padding: "2rem", maxWidth: "400px", margin: "0 auto" }}>
       <h1>Login</h1>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form onSubmit={handleLogin}>
@@ -50,8 +51,10 @@ export default function LoginPage() {
             <input
               type="email"
               value={email}
+              disabled={loading}
               onChange={(e) => setEmail(e.target.value)}
               required
+              style={{ width: "100%" }}
             />
           </label>
         </div>
@@ -61,18 +64,25 @@ export default function LoginPage() {
             <input
               type="password"
               value={password}
+              disabled={loading}
               onChange={(e) => setPassword(e.target.value)}
               required
+              style={{ width: "100%" }}
             />
           </label>
         </div>
-        <button type="submit" disabled={loading}>
+        <button
+          type="submit"
+          disabled={loading}
+          style={{ padding: "0.5rem 1rem" }}
+        >
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
     </div>
   );
 }
+
 
 
 
