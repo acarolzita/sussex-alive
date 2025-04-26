@@ -1,10 +1,12 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // ...other configuration settings
+  // Enables `next export` to generate a fully static site
+  output: 'export',
 };
 
-module.exports = nextConfig;
+export default nextConfig;
 
