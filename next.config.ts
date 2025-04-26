@@ -4,8 +4,8 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Enables `next export` to generate a fully static site
-  output: 'export',
+  // No static-export mode. This app uses dynamic NextAuth routes and API handlers,
+  // so it must run in a Node environment (SSR/API-ready).
 };
 
 export default nextConfig;
