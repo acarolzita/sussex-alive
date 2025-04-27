@@ -1,5 +1,7 @@
+// app/create-post/page.tsx
 "use client";
 
+import ProtectedRoute from "@/components/ProtectedRoute";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
@@ -10,20 +12,14 @@ export default function CreatePostPage() {
   const [content, setContent] = useState("");
   const [message, setMessage] = useState("");
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
 
   async function handleCreatePost(e: React.FormEvent) {
     e.preventDefault();
     setMessage("");
 
-    if (!user) {
-      setMessage("You must be logged in to create a post.");
-      return;
-    }
-
     try {
-      // Dynamically fetch the Firebase ID token
-      const idToken = await user.getIdToken();
+      const idToken = await user?.getIdToken();
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts`, {
         method: "POST",
@@ -49,37 +45,36 @@ export default function CreatePostPage() {
     }
   }
 
-  if (loading) {
-    return <div className="main-container">Loading...</div>;
-  }
-
   return (
-    <div className="main-container">
-      <h1 className="text-2xl font-bold mb-4">Create a New Post</h1>
-      {message && <p className="text-red-500 mb-4">{message}</p>}
-      <form onSubmit={handleCreatePost} className="flex flex-col gap-4 w-80">
-        <input
-          type="text"
-          placeholder="Post Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="input"
-          required
-        />
-        <textarea
-          placeholder="Post Content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="input"
-          required
-        />
-        <button type="submit" className="btn btn-primary">
-          Create Post
-        </button>
-      </form>
-    </div>
+    <ProtectedRoute>
+      <div className="main-container">
+        <h1 className="text-2xl font-bold mb-4">Create a New Post</h1>
+        {message && <p className="text-red-500 mb-4">{message}</p>}
+        <form onSubmit={handleCreatePost} className="flex flex-col gap-4 w-80">
+          <input
+            type="text"
+            placeholder="Post Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="input"
+            required
+          />
+          <textarea
+            placeholder="Post Content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="input"
+            required
+          />
+          <button type="submit" className="btn btn-primary">
+            Create Post
+          </button>
+        </form>
+      </div>
+    </ProtectedRoute>
   );
 }
+
 
 
 
