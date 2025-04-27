@@ -1,107 +1,63 @@
 "use client";
 
 import { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 
-export default function RegisterPage() {
+export default function SignupPage() {
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [studentId, setStudentId] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
-  async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
+    setError("");
 
     try {
-      const res = await fetch(
-        "https://sussex-alive-backend.onrender.com/api/auth/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, name, password, studentId }),
-        }
-      );
-
-      const data = await res.json();
-      if (res.ok) {
-        console.log("Registration successful:", data);
-        router.push("/login");
-      } else {
-        setError(data.error || "Registration failed");
-      }
-    } catch (err) {
-      console.error("Network or parsing error:", err);
-      setError("An error occurred. Please try again later.");
-    } finally {
-      setLoading(false);
+      await createUserWithEmailAndPassword(auth, email, password);
+      router.push("/feed"); // Redirect to feed after signup
+    } catch (err: any) {
+      setError(err.message);
     }
   }
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "400px", margin: "0 auto" }}>
-      <h1>Register</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleRegister}>
-        <div style={{ marginBottom: "1rem" }}>
-          <label>
-            Email:{" "}
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              disabled={loading}
-            />
-          </label>
-        </div>
-        <div style={{ marginBottom: "1rem" }}>
-          <label>
-            Name:{" "}
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              disabled={loading}
-            />
-          </label>
-        </div>
-        <div style={{ marginBottom: "1rem" }}>
-          <label>
-            Password:{" "}
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={loading}
-            />
-          </label>
-        </div>
-        <div style={{ marginBottom: "1rem" }}>
-          <label>
-            Student ID:{" "}
-            <input
-              type="text"
-              value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
-              required
-              disabled={loading}
-            />
-          </label>
-        </div>
-        <button type="submit" disabled={loading} style={{ padding: "0.5rem 1rem" }}>
-          {loading ? "Registering..." : "Register"}
+    <div className="main-container">
+      <h1 className="text-2xl font-bold mb-4">Sign Up</h1>
+      <form onSubmit={handleSignup} className="flex flex-col gap-4 w-80">
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="input"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="input"
+          required
+        />
+        <button type="submit" className="btn btn-primary">
+          Sign Up
         </button>
+        {error && <p className="text-red-500">{error}</p>}
       </form>
+      <p className="mt-4 text-sm">
+        Already have an account?{" "}
+        <a href="/login" className="text-blue-500 hover:underline">
+          Log in here
+        </a>
+      </p>
     </div>
   );
 }
+
 
 
 
