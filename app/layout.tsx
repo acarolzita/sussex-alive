@@ -1,6 +1,6 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 import { AuthProvider } from "@/context/AuthContext";
+import Navbar from "@/components/Navbar"; // <- Import the Navbar
 
 export const metadata: Metadata = {
   title: "Sussex-Alive",
@@ -16,10 +16,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <AuthProvider>
+          <Navbar /> {/* <- Add Navbar here */}
           {children}
         </AuthProvider>
       </body>
     </html>
   );
 }
+
 
