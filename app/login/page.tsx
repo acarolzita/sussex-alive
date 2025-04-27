@@ -1,28 +1,30 @@
-// app/login/page.tsx (example)
 "use client";
 
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
+    setError("");
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      alert("Login successful!");
-      // You can redirect to homepage
+      router.push("/feed"); // Redirect to your feed page after login
     } catch (err: any) {
       setError(err.message);
     }
-  };
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="main-container">
       <h1 className="text-2xl font-bold mb-4">Login</h1>
       <form onSubmit={handleLogin} className="flex flex-col gap-4 w-80">
         <input
@@ -30,7 +32,7 @@ export default function LoginPage() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="p-2 border rounded"
+          className="input"
           required
         />
         <input
@@ -38,17 +40,24 @@ export default function LoginPage() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="p-2 border rounded"
+          className="input"
           required
         />
-        <button type="submit" className="p-2 bg-blue-500 text-white rounded">
+        <button type="submit" className="btn btn-primary">
           Log In
         </button>
         {error && <p className="text-red-500">{error}</p>}
       </form>
+      <p className="mt-4 text-sm">
+        Don't have an account?{" "}
+        <a href="/signup" className="text-blue-500 hover:underline">
+          Sign up here
+        </a>
+      </p>
     </div>
   );
 }
+
 
 
 
