@@ -2,84 +2,85 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { auth } from "@/lib/firebase";
+import { useAuth } from "@/context/AuthContext";
 
 export default function CreatePostPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [message, setMessage] = useState("");
   const router = useRouter();
+  const { user, loading } = useAuth();
 
-  async function handleCreatePost(e: React.FormEvent<HTMLFormElement>) {
+  async function handleCreatePost(e: React.FormEvent) {
     e.preventDefault();
+    setMessage("");
 
-    // Retrieve the token from localStorage (ensure you're logged in)
-    const token = localStorage.getItem("token");
-    console.log("Token being sent:", token); // Debug log for token
-
-    if (!token) {
-      setMessage("You need to be logged in to create a post.");
+    if (!user) {
+      setMessage("You must be logged in to create a post.");
       return;
     }
 
     try {
-      // Make the POST request to your backend
-      const res = await fetch("https://sussex-alive-backend.onrender.com/api/posts", {
+      // Dynamically fetch the Firebase ID token
+      const idToken = await user.getIdToken();
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}` // token is your valid JWT token
+          "Authorization": `Bearer ${idToken}`,
         },
         body: JSON.stringify({
           title,
-          content
+          content,
         }),
       });
 
-      const data = await res.json();
-      if (res.ok) {
-        setMessage("Post created successfully!");
-        // Redirect to feed page after success
-        router.push("/feed");
-      } else {
-        setMessage(data.error || "Failed to create post.");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to create post");
       }
+
+      setMessage("Post created successfully!");
+      router.push("/feed");
     } catch (error: any) {
-      console.error("Error creating post:", error);
-      setMessage("An error occurred while creating the post.");
+      setMessage("Error creating post: " + error.message);
     }
   }
 
+  if (loading) {
+    return <div className="main-container">Loading...</div>;
+  }
+
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Create a New Post</h1>
-      {message && <p>{message}</p>}
-      <form onSubmit={handleCreatePost}>
-        <div style={{ marginBottom: "1rem" }}>
-          <label>
-            Title:{" "}
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
-          </label>
-        </div>
-        <div style={{ marginBottom: "1rem" }}>
-          <label>
-            Content:{" "}
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              required
-            ></textarea>
-          </label>
-        </div>
-        <button type="submit">Create Post</button>
+    <div className="main-container">
+      <h1 className="text-2xl font-bold mb-4">Create a New Post</h1>
+      {message && <p className="text-red-500 mb-4">{message}</p>}
+      <form onSubmit={handleCreatePost} className="flex flex-col gap-4 w-80">
+        <input
+          type="text"
+          placeholder="Post Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="input"
+          required
+        />
+        <textarea
+          placeholder="Post Content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className="input"
+          required
+        />
+        <button type="submit" className="btn btn-primary">
+          Create Post
+        </button>
       </form>
     </div>
   );
 }
+
 
 
 
