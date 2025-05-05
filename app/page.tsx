@@ -1,94 +1,37 @@
-// app/page.tsx
+"use client";
+
+import Link from "next/link";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="main-container">
-      <header>
+    <div className="main-container text-center">
+      <header className="mb-6">
         <Image
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
+          src="/sussex-logo.png" // Add your logo to the /public folder
+          alt="Sussex-Alive Logo"
+          width={120}
+          height={120}
           priority
         />
       </header>
 
       <main>
-        <h1>Welcome to Sussex-Alive!</h1>
-        <p>
-          Get started by editing <code>app/page.tsx</code>.
+        <h1 className="text-4xl font-bold mb-4">Welcome to Sussex-Alive 🎓</h1>
+        <p className="text-lg text-gray-600 mb-6">
+          A social platform for Sussex students to connect, post, and thrive together.
         </p>
-        <div>
-          <a
-            className="btn btn-primary"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src="/vercel.svg"
-              alt="Vercel logo"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="btn btn-secondary"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+
+        <div className="flex justify-center gap-4">
+          <Link href="/signup" className="btn btn-primary">
+            Join Now
+          </Link>
+          <Link href="/login" className="btn btn-secondary">
+            Log In
+          </Link>
         </div>
       </main>
-
-      <footer className="navbar">
-        <a
-          className="nav-link"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="nav-link"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="nav-link"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
+
