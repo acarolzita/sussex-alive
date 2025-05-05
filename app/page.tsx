@@ -1,14 +1,11 @@
-"use client";
-
-import Link from "next/link";
 import Image from "next/image";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <div className="main-container text-center">
       <header className="mb-6">
         <Image
-          src="/sussex-logo.png" // Add your logo to the /public folder
+          src="/sussex-logo.png"
           alt="Sussex-Alive Logo"
           width={120}
           height={120}
@@ -23,15 +20,16 @@ export default function Home() {
         </p>
 
         <div className="flex justify-center gap-4">
-          <Link href="/signup" className="btn btn-primary">
+          <a href="/signup" className="btn btn-primary">
             Join Now
-          </Link>
-          <Link href="/login" className="btn btn-secondary">
+          </a>
+          <a href="/login" className="btn btn-secondary">
             Log In
-          </Link>
+          </a>
         </div>
       </main>
     </div>
   );
 }
+
 
