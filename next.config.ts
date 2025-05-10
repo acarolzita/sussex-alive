@@ -1,12 +1,16 @@
-import { NextConfig } from 'next';
+// next.config.ts
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  webpack(config) {
+    config.resolve.alias["@"] = require("path").resolve(__dirname);
+    return config;
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // No static-export mode. This app uses dynamic NextAuth routes and API handlers,
-  // so it must run in a Node environment (SSR/API-ready).
 };
 
 export default nextConfig;
+
 
