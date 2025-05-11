@@ -1,10 +1,9 @@
 // next.config.ts
 import path from "path";
-import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   webpack(config) {
-    config.resolve.alias["@"] = path.resolve(__dirname); // ✅ Tells Webpack what "@" means
+    config.resolve.alias["@"] = path.resolve(__dirname); // ✅ Tell Webpack what "@" means
     return config;
   },
   eslint: {
@@ -13,6 +12,7 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
 
 
 
