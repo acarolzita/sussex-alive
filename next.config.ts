@@ -1,6 +1,8 @@
+// next.config.ts
 import path from "path";
+import { NextConfig } from "next";
 
-const nextConfig = {
+const nextConfig: NextConfig = {
   webpack(config) {
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
@@ -14,6 +16,7 @@ const nextConfig = {
 };
 
 export default nextConfig;
+
 
 
 
