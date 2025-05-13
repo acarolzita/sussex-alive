@@ -1,3 +1,4 @@
+// components/ProtectedRoute.tsx
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
@@ -15,8 +16,9 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   }, [user, loading, router]);
 
   if (loading || !user) {
-    return <div className="main-container">Loading...</div>; // Show loading or blank while checking auth
+    return <div className="main-container">Loading...</div>;
   }
 
   return <>{children}</>;
 }
+
