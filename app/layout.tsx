@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Sussex-Alive | Connect with Students",
     description: "Meet and collaborate with fellow students on Sussex-Alive.",
-    url: "https://your-frontend-url.com", // <-- UPDATE THIS
+    url: "https://sussex-alive.vercel.app/", 
     siteName: "Sussex-Alive",
     images: [
       {
