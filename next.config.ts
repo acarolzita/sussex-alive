@@ -1,12 +1,11 @@
-// next.config.ts
 import path from "path";
-import { NextConfig } from "next";
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   webpack(config) {
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
-      "@": path.resolve(__dirname),
+      "@": path.resolve(__dirname), // This maps "@" to your frontend root
     };
     return config;
   },
@@ -16,6 +15,7 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
 
 
 
