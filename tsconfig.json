@@ -14,9 +14,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "baseUrl": ".",                       // ✅ Add this
-    "paths": {                            // ✅ And this
-      "@/*": ["./*"]
+    "baseUrl": ".",                          // <-- Make this root
+    "paths": {
+      "@/*": ["./*"]                         // <-- Alias `@/` to your project root
     },
     "plugins": [
       {
@@ -32,4 +32,5 @@
   ],
   "exclude": ["node_modules"]
 }
+
 
