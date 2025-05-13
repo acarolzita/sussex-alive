@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     siteName: "Sussex-Alive",
     images: [
       {
-        url: "https://your-frontend-url.com/og-image.png", // <-- Optional custom preview image
+        url: "https://sussex-alive.vercel.app/sussex-logo.png", // <-- Optional custom preview image
         width: 800,
         height: 600,
       },
