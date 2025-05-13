@@ -24,7 +24,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Sussex-Alive",
     description: "Connect with Sussex students online!",
-    creator: "@your_twitter", // optional
   },
 };
 
