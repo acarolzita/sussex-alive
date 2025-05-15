@@ -25,12 +25,9 @@ export default function CreatePostPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${idToken}`,
+          Authorization: `Bearer ${idToken}`,
         },
-        body: JSON.stringify({
-          title,
-          content,
-        }),
+        body: JSON.stringify({ title, content }),
       });
 
       if (!response.ok) {
@@ -74,6 +71,7 @@ export default function CreatePostPage() {
     </ProtectedRoute>
   );
 }
+
 
 
 

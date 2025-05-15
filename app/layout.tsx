@@ -1,3 +1,4 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { AuthProvider } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
@@ -8,11 +9,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Sussex-Alive | Connect with Students",
     description: "Meet and collaborate with fellow students on Sussex-Alive.",
-    url: "https://sussex-alive.vercel.app/", 
+    url: "https://sussex-alive.vercel.app/",
     siteName: "Sussex-Alive",
     images: [
       {
-        url: "https://sussex-alive.vercel.app/sussex-logo.png", // <-- Optional custom preview image
+        url: "https://sussex-alive.vercel.app/sussex-logo.png",
         width: 800,
         height: 600,
       },
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
+
 
 
 
