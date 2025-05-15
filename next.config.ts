@@ -1,20 +1,24 @@
 import path from "path";
-import type { NextConfig } from "next";
+import { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   webpack(config) {
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
-      "@": path.resolve(__dirname), // This maps "@" to your frontend root
+      "@": path.resolve(__dirname),
     };
     return config;
   },
   eslint: {
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    appDir: true, // <-- Important for Next.js 13+ App Router support
+  },
 };
 
 export default nextConfig;
+
 
 
 
