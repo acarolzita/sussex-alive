@@ -1,7 +1,7 @@
 // app/layout.tsx
 import type { Metadata } from "next";
-import { AuthProvider } from "@/context/AuthContext";
-import Navbar from "@/components/Navbar";
+import { AuthProvider } from "../context/AuthContext";
+import Navbar from "../components/Navbar";
 
 export const metadata: Metadata = {
   title: "Sussex-Alive | Connect with Students",

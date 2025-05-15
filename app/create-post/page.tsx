@@ -1,11 +1,11 @@
 // app/create-post/page.tsx
 "use client";
 
-import ProtectedRoute from "@/components/ProtectedRoute";
+import ProtectedRoute from "../../components/ProtectedRoute";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { auth } from "@/lib/firebase";
-import { useAuth } from "@/context/AuthContext";
+import { auth } from "../../lib/firebase";
+import { useAuth } from "../../context/AuthContext";
 
 export default function CreatePostPage() {
   const [title, setTitle] = useState("");
