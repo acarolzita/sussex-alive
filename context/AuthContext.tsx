@@ -1,18 +1,21 @@
 // context/AuthContext.tsx
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, getAuth, User } from "firebase/auth";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
-interface AuthContextType {
+interface AuthContextProps {
   user: User | null;
   loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType>({ user: null, loading: true });
+const AuthContext = createContext<AuthContextProps>({
+  user: null,
+  loading: true,
+});
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -34,4 +37,5 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
+
 
