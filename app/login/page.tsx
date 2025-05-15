@@ -9,17 +9,29 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/feed"); // Redirect to your feed page after login
+      router.push("/feed"); // ✅ Redirect after login
     } catch (err: any) {
-      setError(err.message);
+      const code = err.code || "";
+      let message = "Login failed.";
+
+      // Optional: map Firebase errors to user-friendly messages
+      if (code === "auth/user-not-found") message = "User not found.";
+      else if (code === "auth/wrong-password") message = "Incorrect password.";
+      else if (code === "auth/invalid-email") message = "Invalid email format.";
+
+      setError(message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -43,20 +55,21 @@ export default function LoginPage() {
           className="input"
           required
         />
-        <button type="submit" className="btn btn-primary">
-          Log In
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? "Logging in..." : "Log In"}
         </button>
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500 text-sm">{error}</p>}
       </form>
       <p className="mt-4 text-sm">
         Don't have an account?{" "}
-        <a href="/signup" className="text-blue-500 hover:underline">
-          Sign up here
+        <a href="/register" className="text-blue-500 hover:underline">
+          Register here
         </a>
       </p>
     </div>
   );
 }
+
 
 
 
