@@ -12,12 +12,11 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  experimental: {
-    appDir: true, // <-- Important for Next.js 13+ App Router support
-  },
+  // Removed experimental.appDir flag as it's no longer needed
 };
 
 export default nextConfig;
+
 
 
 
