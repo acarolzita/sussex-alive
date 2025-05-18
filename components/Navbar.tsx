@@ -15,35 +15,44 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="navbar">
-      <div className="flex items-center gap-4">
-        <a href="/" className="nav-link font-bold text-lg">
+    <nav className="w-full flex justify-between items-center px-6 py-3 bg-white shadow-md">
+      <div className="flex items-center gap-6">
+        <a href="/" className="text-xl font-bold text-blue-600 hover:underline">
           Sussex-Alive
         </a>
         {user && (
           <>
-            <a href="/feed" className="nav-link">
+            <a href="/feed" className="text-gray-700 hover:text-blue-500">
               Feed
             </a>
-            <a href="/create-post" className="nav-link">
+            <a href="/create-post" className="text-gray-700 hover:text-blue-500">
               Create Post
+            </a>
+            <a href="/chat" className="text-gray-700 hover:text-blue-500">
+              Chat
+            </a>
+            <a href="/profile" className="text-gray-700 hover:text-blue-500">
+              Profile
             </a>
           </>
         )}
       </div>
+
       <div className="flex items-center gap-4">
-        {!user && (
+        {!user ? (
           <>
-            <a href="/login" className="nav-link">
+            <a href="/login" className="text-sm px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
               Login
             </a>
-            <a href="/signup" className="nav-link">
+            <a href="/register" className="text-sm px-4 py-2 border border-blue-500 text-blue-500 rounded hover:bg-blue-50">
               Sign Up
             </a>
           </>
-        )}
-        {user && (
-          <button onClick={handleLogout} className="btn btn-secondary">
+        ) : (
+          <button
+            onClick={handleLogout}
+            className="text-sm px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
             Logout
           </button>
         )}
@@ -51,3 +60,4 @@ export default function Navbar() {
     </nav>
   );
 }
+

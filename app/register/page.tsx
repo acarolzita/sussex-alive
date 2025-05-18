@@ -9,17 +9,35 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setLoading(true);
+
+    // Custom email validation for Sussex domain
+    if (!email.endsWith("@sussex.ac.uk")) {
+      setError("Only @sussex.ac.uk email addresses are allowed.");
+      setLoading(false);
+      return;
+    }
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/feed"); // Redirect to feed after signup
+      router.push("/feed");
     } catch (err: any) {
-      setError(err.message);
+      const code = err.code;
+      let message = "Registration failed.";
+
+      if (code === "auth/email-already-in-use") message = "Email already in use.";
+      else if (code === "auth/invalid-email") message = "Invalid email address.";
+      else if (code === "auth/weak-password") message = "Password should be at least 6 characters.";
+
+      setError(message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -43,10 +61,10 @@ export default function SignupPage() {
           className="input"
           required
         />
-        <button type="submit" className="btn btn-primary">
-          Sign Up
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? "Signing up..." : "Sign Up"}
         </button>
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500 text-sm">{error}</p>}
       </form>
       <p className="mt-4 text-sm">
         Already have an account?{" "}
@@ -57,6 +75,7 @@ export default function SignupPage() {
     </div>
   );
 }
+
 
 
 

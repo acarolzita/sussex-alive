@@ -1,14 +1,17 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 
 export default function ProfilePage() {
-  const { user } = useAuth(); // Firebase user
+  const { user } = useAuth();
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [profilePic, setProfilePic] = useState("");
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -33,6 +36,7 @@ export default function ProfilePage() {
         setProfilePic(data.profilePic || "");
       } catch (error) {
         console.error("Error loading profile:", error);
+        setMessage("Error loading profile.");
       } finally {
         setLoading(false);
       }
@@ -43,6 +47,9 @@ export default function ProfilePage() {
 
   const handleUpdate = async () => {
     try {
+      setUpdating(true);
+      setMessage("");
+
       const idToken = await user?.getIdToken();
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/profile/${user?.uid}`,
@@ -57,10 +64,12 @@ export default function ProfilePage() {
       );
 
       if (!res.ok) throw new Error("Update failed");
-      alert("Profile updated!");
+      setMessage("✅ Profile updated successfully!");
     } catch (error) {
       console.error("Update error:", error);
-      alert("Failed to update profile.");
+      setMessage("❌ Failed to update profile.");
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -73,37 +82,47 @@ export default function ProfilePage() {
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col items-center mt-10"
     >
-      <h2 className="text-3xl font-bold text-blue-600">Your Profile</h2>
+      <h2 className="text-3xl font-bold text-blue-600 mb-4">Your Profile</h2>
       <img
         src={profilePic || "/default-avatar.png"}
         alt="Profile"
-        className="w-24 h-24 rounded-full mt-4 shadow-lg"
+        className="w-24 h-24 rounded-full shadow-lg mb-4"
       />
+
       <input
-        className="border p-2 mt-2 rounded-lg w-72 text-center"
+        className="border p-2 mb-2 rounded-lg w-72 text-center"
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Your Name"
       />
       <textarea
-        className="border p-2 mt-2 rounded-lg w-72 text-center"
+        className="border p-2 mb-2 rounded-lg w-72 text-center"
         value={bio}
         onChange={(e) => setBio(e.target.value)}
         placeholder="Your Bio"
       />
       <input
-        className="border p-2 mt-2 rounded-lg w-72 text-center"
+        className="border p-2 mb-4 rounded-lg w-72 text-center"
         value={profilePic}
         onChange={(e) => setProfilePic(e.target.value)}
         placeholder="Profile Picture URL"
       />
+
       <button
         onClick={handleUpdate}
-        className="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+        className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+        disabled={updating}
       >
-        Update Profile
+        {updating ? "Updating..." : "Update Profile"}
       </button>
+
+      {message && (
+        <p className={`mt-4 text-sm ${message.startsWith("✅") ? "text-green-600" : "text-red-600"}`}>
+          {message}
+        </p>
+      )}
     </motion.div>
   );
 }
+
 

@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sussex-Alive 🎓
 
-## Getting Started
+**Sussex-Alive** is a social media platform built for University of Sussex students to connect, post, chat, and manage their profiles in a safe, university-verified environment.
 
-First, run the development server:
+---
+
+## 🌐 Live Project
+
+* **Frontend:** [https://sussex-alive.vercel.app](https://sussex-alive.vercel.app)
+* **Backend:** [https://sussex-alive-backend.onrender.com](https://sussex-alive-backend.onrender.com)
+
+---
+
+## 🚀 Features
+
+* 🔐 Secure authentication via Firebase (only @sussex.ac.uk emails allowed)
+* 📝 Create and browse public posts
+* 💬 Real-time chat using Socket.IO
+* 👤 User profile view and update
+* 🔒 Protected routes with Firebase Admin middleware
+* 🛀 Persistent storage using Firestore
+
+---
+
+## 📊 Tech Stack
+
+### Frontend
+
+* [Next.js 15 (App Router)](https://nextjs.org/)
+* [Firebase Web SDK (Auth)](https://firebase.google.com/docs/web/setup)
+* [Framer Motion](https://www.framer.com/motion/)
+* [Socket.IO Client](https://socket.io/)
+* Tailwind CSS (custom utility styles)
+
+### Backend
+
+* [Express.js](https://expressjs.com/)
+* [Firebase Admin SDK (Auth & Firestore)](https://firebase.google.com/docs/admin/setup)
+* [Socket.IO Server](https://socket.io/docs/v4/server-initialization/)
+* Hosted on [Render](https://render.com)
+
+---
+
+## 🛠️ Setup Instructions
+
+### 1. Frontend Setup
 
 ```bash
+cd frontend
+npm install
+cp .env.local.example .env.local # Update with Firebase project config
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit: [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2. Backend Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cd backend
+npm install
+cp .env.example .env # Add Firebase Admin credentials & config
+npm run dev
+```
 
-## Learn More
+API will run at: [http://localhost:10000](http://localhost:10000)
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔢 Example Account
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+You must use an email ending with `@sussex.ac.uk` to register and access the platform.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📁 Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* `frontend/app/` – Next.js app pages
+* `frontend/components/` – UI components (Navbar, PostCard, etc.)
+* `frontend/context/` – Global Auth Context
+* `backend/routes/` – Express API endpoints
+* `backend/controllers/` – Request logic handlers
+* `backend/middlewares/` – Token auth middleware
+
+---
+
+## 📄 License
+
+MIT License
+
+---
+
+> Created with ❤️ for University of Sussex

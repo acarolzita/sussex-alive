@@ -1,10 +1,8 @@
-// app/create-post/page.tsx
 "use client";
 
 import ProtectedRoute from "../../components/ProtectedRoute";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { auth } from "../../lib/firebase";
 import { useAuth } from "../../context/AuthContext";
 
 export default function CreatePostPage() {
@@ -18,27 +16,36 @@ export default function CreatePostPage() {
     e.preventDefault();
     setMessage("");
 
-    try {
-      const idToken = await user?.getIdToken();
+    if (!user) {
+      setMessage("You must be logged in to create a post.");
+      return;
+    }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
-        },
-        body: JSON.stringify({ title, content }),
-      });
+    try {
+      const idToken = await user.getIdToken();
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL || "https://sussex-alive-backend.onrender.com"}/api/posts`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify({ title, content }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to create post");
+        throw new Error(errorData?.error || "Failed to create post.");
       }
 
-      setMessage("Post created successfully!");
+      setMessage("✅ Post created successfully!");
       router.push("/feed");
     } catch (error: any) {
-      setMessage("Error creating post: " + error.message);
+      console.error("Create post error:", error);
+      setMessage("❌ Error creating post: " + error.message);
     }
   }
 
@@ -71,6 +78,7 @@ export default function CreatePostPage() {
     </ProtectedRoute>
   );
 }
+
 
 
 

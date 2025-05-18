@@ -1,3 +1,5 @@
+// app/page.tsx
+"use client";
 import Image from "next/image";
 
 export default function HomePage() {
@@ -20,7 +22,7 @@ export default function HomePage() {
         </p>
 
         <div className="flex justify-center gap-4">
-          <a href="/signup" className="btn btn-primary">
+          <a href="/register" className="btn btn-primary">
             Join Now
           </a>
           <a href="/login" className="btn btn-secondary">
@@ -31,5 +33,6 @@ export default function HomePage() {
     </div>
   );
 }
+
 
 

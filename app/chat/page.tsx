@@ -8,13 +8,14 @@ interface Message {
   sender: string;
   text: string;
   receiver: string;
+  createdAt?: string;
 }
 
-export default function Chat() {
+export default function ChatPage() {
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState("");
-  const [selectedUserId, setSelectedUserId] = useState("");
+  const [receiverId, setReceiverId] = useState("");
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -33,27 +34,65 @@ export default function Chat() {
   }, []);
 
   useEffect(() => {
-    if (selectedUserId) {
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/messages?receiverId=${selectedUserId}`)
-        .then((res) => res.json())
-        .then((data) => setMessages(data))
-        .catch((err) => console.error("Error fetching messages:", err));
-    }
-  }, [selectedUserId]);
+    const fetchMessages = async () => {
+      if (!receiverId || !user?.uid) return;
 
-  const sendMessage = async () => {
-    if (!text.trim() || !selectedUserId) return;
-
-    const idToken = await user?.getIdToken(); // Optional for auth
-    const msg: Message = {
-      sender: user?.uid || "Anonymous",
-      text,
-      receiver: selectedUserId,
+      try {
+        const idToken = await user.getIdToken();
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/messages?senderId=${user.uid}&receiverId=${receiverId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${idToken}`,
+            },
+          }
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setMessages(data);
+        } else {
+          console.error("Failed to fetch messages", await res.text());
+        }
+      } catch (err) {
+        console.error("Error fetching messages:", err);
+      }
     };
 
-    socketRef.current?.emit("sendMessage", msg);
-    setMessages((prev) => [...prev, msg]);
-    setText("");
+    fetchMessages();
+  }, [receiverId, user]);
+
+  const sendMessage = async () => {
+    if (!text.trim() || !receiverId || !user?.uid) return;
+
+    const idToken = await user.getIdToken();
+
+    const msg: Message = {
+      sender: user.uid,
+      receiver: receiverId,
+      text,
+    };
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/messages`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify(msg),
+      });
+
+      if (res.ok) {
+        const savedMsg = await res.json();
+        socketRef.current?.emit("sendMessage", savedMsg);
+        setMessages((prev) => [...prev, savedMsg]);
+        setText("");
+      } else {
+        console.error("Failed to send message", await res.text());
+      }
+    } catch (err) {
+      console.error("Error sending message:", err);
+    }
   };
 
   return (
@@ -61,41 +100,43 @@ export default function Chat() {
       <h1 className="text-2xl font-bold mb-4">Chat</h1>
 
       <div className="mb-4">
-        <label className="mr-2">Receiver ID:</label>
+        <label className="mr-2">Receiver UID:</label>
         <input
           type="text"
-          value={selectedUserId}
-          onChange={(e) => setSelectedUserId(e.target.value)}
+          value={receiverId}
+          onChange={(e) => setReceiverId(e.target.value)}
           className="input"
+          placeholder="Enter another user's UID"
         />
       </div>
 
-      <div className="mb-4">
-        <label className="mr-2">Message:</label>
+      <div className="mb-4 flex gap-2">
         <input
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="input"
+          className="input flex-grow"
+          placeholder="Type a message..."
         />
+        <button onClick={sendMessage} className="btn btn-primary">
+          Send
+        </button>
       </div>
 
-      <button onClick={sendMessage} className="btn btn-primary mb-4">
-        Send
-      </button>
-
-      <hr />
-      <h2 className="text-xl font-semibold mt-4 mb-2">Messages</h2>
+      <hr className="my-4" />
+      <h2 className="text-xl font-semibold mb-2">Messages</h2>
       <ul className="space-y-2">
         {messages.map((msg, idx) => (
-          <li key={idx}>
-            <strong>{msg.sender}</strong>: {msg.text} <em>(to {msg.receiver})</em>
+          <li key={idx} className="border p-2 rounded">
+            <strong>{msg.sender}</strong>: {msg.text}{" "}
+            <em className="text-sm text-gray-500">(to {msg.receiver})</em>
           </li>
         ))}
       </ul>
     </div>
   );
 }
+
 
 
 
