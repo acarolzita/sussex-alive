@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { io, Socket } from "socket.io-client";
+import { useAuth } from "../../context/AuthContext";
 
 interface Message {
   sender: string;
@@ -9,93 +10,94 @@ interface Message {
   receiver: string;
 }
 
-let socket: Socket | undefined;
-
 export default function Chat() {
+  const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState("");
-  const [sender, setSender] = useState("User1"); // For MVP; later derive from auth data
-  const [receiver, setReceiver] = useState("User2");
-  const [selectedUser, setSelectedUser] = useState<{ id: string }>({ id: "" });
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    // Connect to the backend Socket.io server
-    socket = io("https://sussex-alive-backend.onrender.com");
+    if (!socketRef.current) {
+      socketRef.current = io(process.env.NEXT_PUBLIC_BACKEND_URL || "https://sussex-alive-backend.onrender.com");
 
-    // Listen for broadcasted messages using "message" event if that's how the server sends it,
-    // or change to "sendMessage" if the server broadcast uses that.
-    socket.on("message", (msg: Message) => {
-      setMessages((prev) => [...prev, msg]);
-    });
+      socketRef.current.on("message", (msg: Message) => {
+        setMessages((prev) => [...prev, msg]);
+      });
+    }
 
     return () => {
-      socket?.disconnect();
+      socketRef.current?.disconnect();
+      socketRef.current = null;
     };
   }, []);
 
   useEffect(() => {
-    if (selectedUser.id !== "") {
-      fetch(`/api/messages?receiverId=${selectedUser.id}`)
+    if (selectedUserId) {
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/messages?receiverId=${selectedUserId}`)
         .then((res) => res.json())
         .then((data) => setMessages(data))
         .catch((err) => console.error("Error fetching messages:", err));
     }
-  }, [selectedUser]);
+  }, [selectedUserId]);
 
-  const handleSelectedUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedUser({ id: e.target.value });
-  };
+  const sendMessage = async () => {
+    if (!text.trim() || !selectedUserId) return;
 
-  const sendMessage = () => {
-    if (!text.trim() || selectedUser.id === "") return;
-    const msg: Message = { sender, text, receiver };
-    
-    // Emit with event name "sendMessage" to match backend, if needed:
-    socket?.emit("sendMessage", msg);
-    
-    // Alternatively, if backend emits back via "message", you may omit local addition
+    const idToken = await user?.getIdToken(); // Optional for auth
+    const msg: Message = {
+      sender: user?.uid || "Anonymous",
+      text,
+      receiver: selectedUserId,
+    };
+
+    socketRef.current?.emit("sendMessage", msg);
     setMessages((prev) => [...prev, msg]);
     setText("");
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Chat Page</h1>
-      <div style={{ marginBottom: 10 }}>
-        <label>
-          Selected User ID:
-          <input
-            type="text"
-            value={selectedUser.id}
-            onChange={handleSelectedUserChange}
-            style={{ marginLeft: 10 }}
-          />
-        </label>
+    <div className="main-container p-4">
+      <h1 className="text-2xl font-bold mb-4">Chat</h1>
+
+      <div className="mb-4">
+        <label className="mr-2">Receiver ID:</label>
+        <input
+          type="text"
+          value={selectedUserId}
+          onChange={(e) => setSelectedUserId(e.target.value)}
+          className="input"
+        />
       </div>
-      <div style={{ marginBottom: 10 }}>
-        <label>
-          Message:
-          <input
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            style={{ marginLeft: 10 }}
-          />
-        </label>
+
+      <div className="mb-4">
+        <label className="mr-2">Message:</label>
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          className="input"
+        />
       </div>
-      <button onClick={sendMessage}>Send</button>
+
+      <button onClick={sendMessage} className="btn btn-primary mb-4">
+        Send
+      </button>
+
       <hr />
-      <h2>Messages</h2>
-      <ul>
+      <h2 className="text-xl font-semibold mt-4 mb-2">Messages</h2>
+      <ul className="space-y-2">
         {messages.map((msg, idx) => (
           <li key={idx}>
-            <strong>{msg.sender}</strong>: {msg.text} (to {msg.receiver})
+            <strong>{msg.sender}</strong>: {msg.text} <em>(to {msg.receiver})</em>
           </li>
         ))}
       </ul>
     </div>
   );
 }
+
+
 
 
 
