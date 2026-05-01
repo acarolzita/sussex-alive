@@ -1,5 +1,6 @@
 // app/layout.tsx
 import type { Metadata } from "next";
+import "./globals.css";
 import { AuthProvider } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
 
@@ -13,11 +14,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Sussex-Alive | Connect with Students",
     description: "Meet and collaborate with fellow students on Sussex-Alive.",
-    url: "https://sussex-alive.vercel.app/",
+    url: "https://sussex-alive-frontend.onrender.com/",
     siteName: "Sussex-Alive",
     images: [
       {
-        url: "https://sussex-alive.vercel.app/sussex-logo.png",
+        url: "https://sussex-alive-frontend.onrender.com/sussex-logo.png",
         width: 800,
         height: 600,
       },
