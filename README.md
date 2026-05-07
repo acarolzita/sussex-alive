@@ -1,93 +1,123 @@
-# Sussex-Alive 🎓
 
-**Sussex-Alive** is a social media platform built for University of Sussex students to connect, post, chat, and manage their profiles in a safe, university-verified environment.
+Sussex-Alive is a social media platform built for University of Sussex students.
 
----
 
-## 🌐 Live Project
+Live Demo
 
-* **Frontend:** [https://sussex-alive.vercel.app](https://sussex-alive.vercel.app)
-* **Backend:** [https://sussex-alive-backend.onrender.com](https://sussex-alive-backend.onrender.com)
+Frontend: [https://sussex-alive-frontend.onrender.com](https://sussex-alive-frontend.onrender.com)
+Backend: [https://sussex-alive-backend.onrender.com](https://sussex-alive-backend.onrender.com)
 
----
 
-## 🚀 Features
+Features
 
-* 🔐 Secure authentication via Firebase (only @sussex.ac.uk emails allowed)
-* 📝 Create and browse public posts
-* 💬 Real-time chat using Socket.IO
-* 👤 User profile view and update
-* 🔒 Protected routes with Firebase Admin middleware
-* 🛀 Persistent storage using Firestore
+Secure authentication using Firebase (Sussex emails only)
+Create and browse public posts
+Real-time chat (Socket.IO)
+User profiles
+Protected routes with Firebase authentication
+Persistent data storage with Firestore
 
----
 
-## 📊 Tech Stack
+In Progress
 
-### Frontend
+Like & comment system
+Notifications
+User search
+Mobile UI improvements
+Real-time feed updates
 
-* [Next.js 15 (App Router)](https://nextjs.org/)
-* [Firebase Web SDK (Auth)](https://firebase.google.com/docs/web/setup)
-* [Framer Motion](https://www.framer.com/motion/)
-* [Socket.IO Client](https://socket.io/)
-* Tailwind CSS (custom utility styles)
 
-### Backend
+Tech Stack
 
-* [Express.js](https://expressjs.com/)
-* [Firebase Admin SDK (Auth & Firestore)](https://firebase.google.com/docs/admin/setup)
-* [Socket.IO Server](https://socket.io/docs/v4/server-initialization/)
-* Hosted on [Render](https://render.com)
+Frontend
 
----
+Next.js 15 (App Router)
+Firebase Web SDK (Authentication)
+Socket.IO Client
+Custom CSS (no Tailwind dependency)
+Framer Motion (planned animations)
 
-## 🛠️ Setup Instructions
+Backend
 
-### 1. Frontend Setup
+Express.js
+Firebase Admin SDK (Auth & Firestore)
+Socket.IO Server
+Hosted on Render
 
-```bash
+Apply full-stack development skillsLearn real-world authentication & APIs
+Build a production-ready social platform
+Create a strong portfolio project for internships
+
+
+Frontend
+
+bash
 cd frontend
 npm install
-cp .env.local.example .env.local # Update with Firebase project config
+cp .env.local.example .env.local
 npm run dev
-```
 
-Visit: [http://localhost:3000](http://localhost:3000)
+Open: [http://localhost:3000](http://localhost:3000)
 
-### 2. Backend Setup
 
-```bash
+Backend
+
+bash
 cd backend
 npm install
-cp .env.example .env # Add Firebase Admin credentials & config
+cp .env.example .env
 npm run dev
-```
 
-API will run at: [http://localhost:10000](http://localhost:10000)
+Runs at: [http://localhost:10000](http://localhost:10000)
 
----
 
-## 🔢 Example Account
+Authentication Rules
 
-You must use an email ending with `@sussex.ac.uk` to register and access the platform.
+Only emails ending in **@sussex.ac.uk** are allowed
+Firebase handles authentication securely
+Backend verifies tokens using Firebase Admin
 
----
 
-## 📁 Project Structure
+Project Structure
 
-* `frontend/app/` – Next.js app pages
-* `frontend/components/` – UI components (Navbar, PostCard, etc.)
-* `frontend/context/` – Global Auth Context
-* `backend/routes/` – Express API endpoints
-* `backend/controllers/` – Request logic handlers
-* `backend/middlewares/` – Token auth middleware
+frontend/
+  app/            Pages (Next.js App Router)
+  components/     UI components
+  context/        Auth state management
 
----
+backend/
+  routes/         API routes
+  controllers/    Business logic
+  middlewares/    Auth middleware
 
-## 📄 License
+
+Deployment
+
+Frontend deployed on Render
+Backend deployed on Render
+Automatic deployment via GitHub integration
+
+
+Future Improvements
+
+Full Firestore integration for posts
+Real-time feed updates
+Messaging system improvements
+Profile customization
+UI/UX polish
+
+
+License
 
 MIT License
 
----
 
-> Created with ❤️ for University of Sussex
+Author
+
+Built by Anna
+University of Sussex – Computer Science
+
+
+
+
+
