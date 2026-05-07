@@ -1,71 +1,129 @@
-// app/page.tsx
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function HomePage() {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.push("/feed");
+    }
+  }, [user, router]);
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 text-gray-900">
-      <section className="mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center px-6 py-20 text-center">
-        <Image
-          src="/sussex-logo.png"
-          alt="Sussex-Alive Logo"
-          width={110}
-          height={110}
-          priority
-          className="mb-6 rounded-full shadow-md"
-        />
+    <main className="home-page">
+      <section className="home-section">
+        <div className="home-left">
+          <div className="home-logo">SA</div>
 
-        <p className="mb-3 rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
-          Built for University of Sussex students
-        </p>
+          <p className="home-badge">Built for University of Sussex students</p>
 
-        <h1 className="max-w-4xl text-5xl font-extrabold tracking-tight text-gray-900 md:text-7xl">
-          Connect with Sussex students on{" "}
-          <span className="text-blue-600">Sussex-Alive</span>
-        </h1>
+          <h1 className="home-title">
+            Your campus community, <span>online.</span>
+          </h1>
 
-        <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-600 md:text-xl">
-          A student-only social platform where Sussex students can share posts,
-          discover classmates, join conversations, and build a stronger campus
-          community.
-        </p>
+          <p className="home-subtitle">
+            Sussex-Alive is a student-only social platform where Sussex students
+            can share posts, find classmates, join conversations, and stay
+            connected with campus life.
+          </p>
 
-        <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-          <Link
-            href="/register"
-            className="rounded-xl bg-blue-600 px-8 py-4 text-base font-bold text-white shadow-lg transition hover:bg-blue-700 hover:shadow-xl"
-          >
-            Join Sussex-Alive
-          </Link>
+          <div className="home-buttons">
+            <Link href="/register" className="home-btn home-btn-primary">
+              Join Sussex-Alive
+            </Link>
 
-          <Link
-            href="/login"
-            className="rounded-xl border border-gray-300 bg-white px-8 py-4 text-base font-bold text-gray-800 shadow-sm transition hover:bg-gray-100"
-          >
-            Log In
-          </Link>
+            <Link href="/login" className="home-btn home-btn-secondary">
+              Log In
+            </Link>
+          </div>
+
+          <div className="home-features">
+            <div className="home-feature-card">
+              <h3>Posts</h3>
+              <p>Share updates</p>
+            </div>
+
+            <div className="home-feature-card">
+              <h3>Chat</h3>
+              <p>Message students</p>
+            </div>
+
+            <div className="home-feature-card">
+              <h3>Profiles</h3>
+              <p>Meet classmates</p>
+            </div>
+          </div>
         </div>
 
-        <div className="mt-16 grid w-full max-w-4xl gap-6 md:grid-cols-3">
-          <div className="rounded-2xl bg-white p-6 shadow-md">
-            <h2 className="text-xl font-bold">Share Updates</h2>
-            <p className="mt-3 text-gray-600">
-              Post thoughts, events, questions, and student life moments.
-            </p>
+        <div className="feed-preview">
+          <div className="feed-preview-header">
+            <div>
+              <h2>Campus Feed Preview</h2>
+              <p>See what students are sharing</p>
+            </div>
+            <span>Live</span>
           </div>
 
-          <div className="rounded-2xl bg-white p-6 shadow-md">
-            <h2 className="text-xl font-bold">Find Students</h2>
-            <p className="mt-3 text-gray-600">
-              Discover people across courses, interests, and societies.
-            </p>
-          </div>
+          <div className="preview-posts">
+            <article className="preview-post">
+              <div className="preview-user">
+                <div className="avatar blue">AM</div>
+                <div>
+                  <h3>Anna M.</h3>
+                  <p>Computer Science · 2 mins ago</p>
+                </div>
+              </div>
+              <p>
+                Anyone going to the library study session tonight? Looking for
+                people revising databases and web development.
+              </p>
+              <div className="preview-actions">
+                <span>❤️ 18 likes</span>
+                <span>💬 6 comments</span>
+              </div>
+            </article>
 
-          <div className="rounded-2xl bg-white p-6 shadow-md">
-            <h2 className="text-xl font-bold">Build Community</h2>
-            <p className="mt-3 text-gray-600">
-              Create a more connected Sussex experience online.
-            </p>
+            <article className="preview-post">
+              <div className="preview-user">
+                <div className="avatar yellow">JS</div>
+                <div>
+                  <h3>James S.</h3>
+                  <p>Business & Management · 14 mins ago</p>
+                </div>
+              </div>
+              <p>
+                New society meetup this Friday near Falmer House. Great chance
+                to meet new people before exams.
+              </p>
+              <div className="preview-actions">
+                <span>❤️ 31 likes</span>
+                <span>💬 12 comments</span>
+              </div>
+            </article>
+
+            <article className="preview-post">
+              <div className="preview-user">
+                <div className="avatar purple">LK</div>
+                <div>
+                  <h3>Leah K.</h3>
+                  <p>Media Studies · 25 mins ago</p>
+                </div>
+              </div>
+              <p>
+                Looking for creators to collaborate on a short campus-life video
+                project.
+              </p>
+              <div className="preview-actions">
+                <span>❤️ 24 likes</span>
+                <span>💬 9 comments</span>
+              </div>
+            </article>
           </div>
         </div>
       </section>

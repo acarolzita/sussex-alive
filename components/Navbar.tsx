@@ -1,13 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
+
+  if (loading) return null;
 
   async function handleLogout() {
     await signOut(auth);
@@ -15,47 +18,42 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="w-full flex justify-between items-center px-6 py-3 bg-white shadow-md">
-      <div className="flex items-center gap-6">
-        <a href="/" className="text-xl font-bold text-blue-600 hover:underline">
-          Sussex-Alive
-        </a>
-        {user && (
-          <>
-            <a href="/feed" className="text-gray-700 hover:text-blue-500">
-              Feed
-            </a>
-            <a href="/create-post" className="text-gray-700 hover:text-blue-500">
-              Create Post
-            </a>
-            <a href="/chat" className="text-gray-700 hover:text-blue-500">
-              Chat
-            </a>
-            <a href="/profile" className="text-gray-700 hover:text-blue-500">
-              Profile
-            </a>
-          </>
-        )}
-      </div>
+    <nav className="site-navbar">
+      <div className="site-navbar-inner">
+        <Link href="/" className="site-brand">
+          <div className="site-brand-icon">SA</div>
+          <span>Sussex-Alive</span>
+        </Link>
 
-      <div className="flex items-center gap-4">
-        {!user ? (
-          <>
-            <a href="/login" className="text-sm px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-              Login
-            </a>
-            <a href="/register" className="text-sm px-4 py-2 border border-blue-500 text-blue-500 rounded hover:bg-blue-50">
-              Sign Up
-            </a>
-          </>
-        ) : (
-          <button
-            onClick={handleLogout}
-            className="text-sm px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-          >
-            Logout
-          </button>
+        {user && (
+          <div className="site-nav-links">
+            <Link href="/feed">Feed</Link>
+            <Link href="/create-post">Create Post</Link>
+            <Link href="/chat">Chat</Link>
+            <Link href="/profile">Profile</Link>
+          </div>
         )}
+
+        <div className="site-auth-buttons">
+          {!user ? (
+            <>
+              <Link href="/login" className="nav-login-btn">
+                Login
+              </Link>
+
+              <Link href="/register" className="nav-signup-btn">
+                Sign Up
+              </Link>
+            </>
+          ) : (
+            <>
+              <span className="site-user-email">{user.email}</span>
+              <button onClick={handleLogout} className="nav-logout-btn">
+                Logout
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );

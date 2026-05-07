@@ -1,58 +1,74 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import PostCard from "../../components/PostCard";
-
-// Define the type for Post objects
-type Post = {
-  id: string;
-  title: string;
-  content: string;
-  userId: string;
-  createdAt: string;
-};
+import Link from "next/link";
 
 export default function FeedPage() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function fetchPosts() {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts`
-        );
-        if (!res.ok) throw new Error(`Error: ${res.status}`);
-        const data: Post[] = await res.json();
-        setPosts(data);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchPosts();
-  }, []);
-
-  if (loading) {
-    return <div className="p-4">Loading posts...</div>;
-  }
-
-  if (error) {
-    return <div className="p-4 text-red-500">Error loading posts: {error}</div>;
-  }
-
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Feed</h1>
-      {posts.length === 0 ? (
-        <p>No posts available.</p>
-      ) : (
-        posts.map((post) => <PostCard key={post.id} post={post} />)
-      )}
-    </div>
+    <main className="app-page">
+      <div className="app-container">
+        <header className="app-header">
+          <h1>Campus Feed</h1>
+          <p>See what Sussex students are sharing today.</p>
+          <Link href="/create-post" className="primary-button">
+            Create Post
+          </Link>
+        </header>
+
+        <article className="feed-post">
+          <div className="feed-post-top">
+            <div className="avatar blue">AM</div>
+            <div>
+              <h3>Anna M.</h3>
+              <p>Computer Science · 5 mins ago</p>
+            </div>
+          </div>
+          <p>
+            Working on my web development project today. Anyone else building
+            something for their portfolio?
+          </p>
+          <div className="preview-actions">
+            <span>❤️ 21 likes</span>
+            <span>💬 8 comments</span>
+          </div>
+        </article>
+
+        <article className="feed-post">
+          <div className="feed-post-top">
+            <div className="avatar yellow">JS</div>
+            <div>
+              <h3>James S.</h3>
+              <p>Business & Management · 18 mins ago</p>
+            </div>
+          </div>
+          <p>
+            Society meetup happening this Friday near Falmer House. Great chance
+            to meet people before exams.
+          </p>
+          <div className="preview-actions">
+            <span>❤️ 34 likes</span>
+            <span>💬 12 comments</span>
+          </div>
+        </article>
+
+        <article className="feed-post">
+          <div className="feed-post-top">
+            <div className="avatar purple">LK</div>
+            <div>
+              <h3>Leah K.</h3>
+              <p>Media Studies · 31 mins ago</p>
+            </div>
+          </div>
+          <p>
+            Looking for people interested in creating short videos about campus
+            life at Sussex.
+          </p>
+          <div className="preview-actions">
+            <span>❤️ 16 likes</span>
+            <span>💬 5 comments</span>
+          </div>
+        </article>
+      </div>
+    </main>
   );
 }
 
