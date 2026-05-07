@@ -21,7 +21,7 @@ export default function Navbar() {
     <nav className="site-navbar">
       <div className="site-navbar-inner">
         <Link href="/" className="site-brand">
-          <div className="site-brand-icon">SA</div>
+          <div className="site-brand-icon">SAL</div>
           <span>Sussex-Alive</span>
         </Link>
 
