@@ -19,7 +19,7 @@ export default function HomePage() {
     <main className="home-page">
       <section className="home-section">
         <div className="home-left">
-          <div className="home-logo">SA</div>
+          <div className="home-logo">SAL</div>
 
           <p className="home-badge">Built for University of Sussex students</p>
 
